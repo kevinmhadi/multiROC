@@ -8,9 +8,9 @@ multi_roc <- function(data, force_diag=TRUE) {
   group_names <- colnames(data) %>% extract(grepl('_true', .)) %>% gsub('(.*)_true', '\\1', .)
   method_names <- colnames(data) %>% extract(grepl('_pred.*', .)) %>%
     gsub('.*_pred_(.*)', '\\1', .) %>% unique
-  y_true <- data[, grepl('_true', colnames(data))]
+  y_true <- data[, grepl('_true', colnames(data)), drop = F]
   colnames(y_true) %<>% gsub('_true', '', .)
-  y_true %<>% .[, match(group_names, colnames(.))]
+  y_true %<>% .[, match(group_names, colnames(.)), drop = F]
 
   res_sp <- list()
   res_se <- list()
@@ -21,9 +21,9 @@ multi_roc <- function(data, force_diag=TRUE) {
     res_se[[i]] <- list()
     res_auc[[i]] <- list()
     method <- method_names[i]
-    y_pred <- data[, grepl(method, colnames(data))]
+    y_pred <- data[, grepl(method, colnames(data)), drop = F]
     colnames(y_pred) %<>% gsub('_pred.*', '', .)
-    y_pred %<>% .[, match(group_names, colnames(.))]
+    y_pred %<>% .[, match(group_names, colnames(.)), drop = F]
     ## Reorder the pred columns ##
     for (j in seq_along(group_names)) {
       y_true_vec <- as.vector(y_true[, j])
